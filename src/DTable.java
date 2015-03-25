@@ -124,7 +124,10 @@ public class DTable
 		rows = count/keyword.length;
 		int remainder = count%keyword.length;
 		int collumns = keyword.length;	
-		char [][] matrix = new char [collumns][rows+1];
+		int rFlag = 0;
+		if(remainder > 0)
+			rFlag = 1;
+		char [][] matrix = new char [collumns][rows+rFlag];
 		
 		br = new BufferedReader(new FileReader(fileName));
 		int oddFlag = 1, row, collumn;
@@ -135,24 +138,30 @@ public class DTable
 		
 		for(CharacterLink CL : SortedKeyword)
 		{
-			if(remainder-- > 0)
-				last = 1;
-			if(remainder == 0)
-				last = 0;
 			collumn = CL.getVal();
-			for(row = 0; row < rows + last; row++)
+			if(collumn < remainder)
+				rFlag = 1;
+			else
+				rFlag = 0;
+			for(row = 0; row < rows + rFlag; row++)
 			{	
+			
 				matrix[collumn][row] = (char) br.read();
 			}			
 		}
-
+		
 		StringBuffer finalString = new StringBuffer();
 		
 		int j=0;
+		if(remainder > 0)
+			rFlag = 1;
 		
-		for(row=0;row<rows+last;row++)
+		for(row=0;row<rows+rFlag;row++)
 		{
-			
+			if(rFlag == 1 && row==rows)
+				collumns = remainder;
+				
+				
 			for(collumn = 0;collumn<collumns;collumn++)
 			{
 				if(oddFlag++ % 2 != 0)
@@ -163,13 +172,6 @@ public class DTable
 					
 					finalString.append(this.getValue(temp));
 					
-					if(br.ready())
-					{
-						temp[0] = (char)br.read();
-						temp[1] = (char)br.read();
-					}
-					else
-						break;
 				}
 			}
 		}

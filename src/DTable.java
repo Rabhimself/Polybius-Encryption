@@ -1,8 +1,12 @@
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -12,7 +16,7 @@ import java.util.Scanner;
 
 public class DTable
 {
-	Map<String, String> h = new HashMap<String, String>();
+	Map<String, Character> h = new HashMap<String, Character>();
 	ArrayList<Queue<Character>> l= new ArrayList<Queue<Character>>();
 
 	
@@ -20,126 +24,159 @@ public class DTable
 	public DTable()
 	{
 	
-			h.put( "FG" , "A" );
-			h.put( "ID" , "B" );
-			h.put( "VV" , "C" );
-			h.put( "GI" , "D" );
-			h.put( "FX" , "E" );
-			h.put( "XD" , "F" );
-			h.put( "DD" , "G" );
-			h.put( "IG" , "H" );
-			h.put( "DV" , "I" );
-			h.put( "XG" , "J" );
-			h.put( "GA" , "K" );
-			h.put( "XA" , "L" );
-			h.put( "GV" , "M" );
-			h.put( "FD" , "N" );
-			h.put( "AG" , "O" );
-			h.put( "AX" , "P" );
-			h.put( "GF" , "Q" );
-			h.put( "VI" , "R" );
-			h.put( "DI" , "S" );
-			h.put( "IA" , "T" );
-			h.put( "DG" , "U" );
-			h.put( "IX" , "V" );
-			h.put( "AD" , "W" );
-			h.put( "VF" , "X" );
-			h.put( "FV" , "Y" );
-			h.put( "DA" , "Z" );
+			h.put( "FG" , 'A' );
+			h.put( "ID" , 'B' );
+			h.put( "VV" , 'C' );
+			h.put( "GI" , 'D' );
+			h.put( "FX" , 'E' );
+			h.put( "XD" , 'F' );
+			h.put( "DD" , 'G' );
+			h.put( "IG" , 'H' );
+			h.put( "DV" , 'I');
+			h.put( "XG" , 'J' );
+			h.put( "GA" , 'K' );
+			h.put( "XA" , 'L' );
+			h.put( "GV" , 'M' );
+			h.put( "FD" , 'N' );
+			h.put( "AG" , 'O' );
+			h.put( "AX" , 'P' );
+			h.put( "GF" , 'Q' );
+			h.put( "VI" , 'R' );
+			h.put( "DI" , 'S' );
+			h.put( "IA" , 'T' );
+			h.put( "DG" , 'U' );
+			h.put( "IX" , 'V' );
+			h.put( "AD" , 'W' );
+			h.put( "VF" , 'X' );
+			h.put( "FV" , 'Y' );
+			h.put( "DA" , 'Z' );
 		
-			h.put( "XX" , "1" );
-			h.put( "GD" , "2" );
-			h.put( "AV" , "3" );
-			h.put( "XI" , "4" );
-			h.put( "FA" , "5" );
-			h.put( "XI" , "6" );
-			h.put( "II" , "7" );
-			h.put( "AF" , "8" );
-			h.put( "IV" , "9" );
-			h.put( "VA" , "0" );
+			h.put( "XX" , '1' );
+			h.put( "GD" , '2' );
+			h.put( "AV" , '3' );
+			h.put( "XI" , '4' );
+			h.put( "FA" , '5' );
+			h.put( "XI" , '6' );
+			h.put( "II" , '7' );
+			h.put( "AF" , '8' );
+			h.put( "IV" , '9' );
+			h.put( "VA" , '0' );
 			
-			h.put( "FF" , ":" );
-			h.put( "AA" , ";" );
-			h.put( "FI" , "," );
-			h.put( "XF" , "." );
-			h.put( "VD" , "\"" );
-			h.put( "DF" , "!" );
-			h.put( "XV" , "-" );
-			h.put( "IF" , "(" );
-			h.put( "DX" , ")" );
-			h.put( "AI" , " " );
-			h.put( "GG" , "?" );
-			h.put( "VG" , "\n" );
-		
+			h.put( "FF" , ':' );
+			h.put( "AA" , ';' );
+			h.put( "FI" , ',' );
+			h.put( "XF" , '.' );
+			h.put( "VD" , '\"' );
+			h.put( "DF" , '!' );
+			h.put( "XV" , '-' );
+			h.put( "IF" , '(' );
+			h.put( "DX" , ')' );
+			h.put( "AI" , ' ' );
+			h.put( "GG" , '?' );
+			h.put( "VG" , '\n' );
+			h.put( "KK" , '\'');
+			h.put( "KV" , '*' );
+			h.put( "KG" , '=');
+			h.put( "KX" , '/');	
 	
 	}
+
+	public char getValue(char [] c)
+	{
+		return h.get(String.valueOf(c));
+	}
 	
-	public String decrypt(StringBuilder s) throws FileNotFoundException, UnsupportedEncodingException
+	public String decrypt(String fileName) throws IOException
 	{
 		PrintWriter writer = new PrintWriter("out2.txt", "UTF-8");
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		Scanner scanner = new Scanner(System.in);
 		
-		Map<Character, Queue<Character>> qMap = new HashMap<Character, Queue<Character>>();
 		int i, rows, m = 0;	
-		int last = 0, temp;
+		int last = 0, tempI;
 		StringBuilder sb = new StringBuilder();
-		
 		
 		System.out.print("Keyword: ");
 		String input = scanner.next();
-		char [] keyword = input.toCharArray(); 
-		char [] sortedKeyword = Arrays.copyOf(keyword, keyword.length);
-
-		Arrays.sort(sortedKeyword);
 		
-		rows = s.length()/keyword.length;
-		int remainder = s.length()%keyword.length;
-
-		for(char c: keyword)
+		char [] keyword = input.toCharArray(); 	
+		ArrayList<CharacterLink> CharLinkList = new ArrayList<CharacterLink>();
+		ArrayList<CharacterLink> SortedKeyword = new ArrayList<CharacterLink>();
+		
+		int index = 0;
+		for(char c : keyword)
 		{
-			qMap.put(c, new LinkedList<Character>());			
+			CharacterLink link = new CharacterLink(c,index++);
+			CharLinkList.add(link);
 		}
-		
-		for(char c : sortedKeyword)
+		SortedKeyword= (ArrayList<CharacterLink>) CharLinkList.clone();
+		Collections.sort(SortedKeyword);
+		System.out.println("getting char count");
+		int count = 0;
+		while(br.ready())
 		{
-			if(--remainder > 0)
+			br.read();
+			count++;
+		}
+		br.close();
+		System.out.println(count);
+		
+		rows = count/keyword.length;
+		int remainder = count%keyword.length;
+		int collumns = keyword.length;	
+		char [][] matrix = new char [collumns][rows+1];
+		
+		br = new BufferedReader(new FileReader(fileName));
+		int oddFlag = 1, row, collumn;
+		char [] temp = new char[2];
+		
+		System.out.println("line 123");
+		
+		
+		for(CharacterLink CL : SortedKeyword)
+		{
+			if(remainder-- > 0)
 				last = 1;
 			if(remainder == 0)
 				last = 0;
-			
-			for(i = 0; i < rows + last; i++)
+			collumn = CL.getVal();
+			for(row = 0; row < rows + last; row++)
 			{	
-				temp = s.charAt(m++);
-				qMap.get(c).offer((char) temp);	
+				matrix[collumn][row] = (char) br.read();
 			}			
 		}
 
 		StringBuffer finalString = new StringBuffer();
 		
 		int j=0;
-		for(i = 0; i < rows; i++)
-		{		
 		
-			for(char c : keyword)
-			{
-				if(qMap.get(c).peek() != null)
-					sb.append(qMap.get(c).poll());
-			}
-		}
-		i=0;
-
-		while(i < sb.length()-2)
+		for(row=0;row<rows+last;row++)
 		{
-			for(j = 0; j < 2 ; j++)
-			{
-				char temp1, temp2;
-				temp1 = sb.charAt(i++);
-				temp2= sb.charAt(i++);
-				String tempS = "" +temp1 + temp2;
-				finalString.append(h.get(tempS));
-			}
 			
+			for(collumn = 0;collumn<collumns;collumn++)
+			{
+				if(oddFlag++ % 2 != 0)
+					temp[0] = matrix[collumn][row];
+				else
+				{
+					temp[1] = matrix[collumn][row];
+					
+					finalString.append(this.getValue(temp));
+					
+					if(br.ready())
+					{
+						temp[0] = (char)br.read();
+						temp[1] = (char)br.read();
+					}
+					else
+						break;
+				}
+			}
 		}
+		
+	
+
+
 		
 		
 		

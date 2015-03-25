@@ -5,133 +5,174 @@ import java.util.*;
 public class ETable extends HashMap<String,String> 
 {
 	private static final long serialVersionUID = 1L;
-	Map<String, String> h = new HashMap<String, String>();
+	Map<Character, String> h = new HashMap<Character, String>();
 	Map<Character, Queue<Character>> qMap = new HashMap<Character, Queue<Character>>();
-	
-	ArrayList<Queue<Character>> l= new ArrayList<Queue<Character>>();
 	
 	public ETable()
 	{
 		
-		h.put( "A" , "FG");
-		h.put( "B" , "ID");
-		h.put( "C" , "VV");
-		h.put( "D" , "GI");
-		h.put( "E" , "FX");
-		h.put( "F" , "XD");
-		h.put( "G" , "DD");
-		h.put( "H" , "IG");
-		h.put( "I" , "DV");
-		h.put( "J" , "XG");
-		h.put( "K" , "GA");
-		h.put( "L" , "XA");
-		h.put( "M" , "GV");
-		h.put( "N" , "FD");
-		h.put( "O" , "AG");
-		h.put( "P" , "AX");
-		h.put( "Q" , "GF");
-		h.put( "R" , "VI");
-		h.put( "S" , "DI");
-		h.put( "T" , "IA");
-		h.put( "U" , "DG");
-		h.put( "V" , "IX");
-		h.put( "W" , "AD");
-		h.put( "X" , "VF");
-		h.put( "Y" , "FV");
-		h.put( "Z" , "DA");
+		h.put( 'A' , "FG");
+		h.put( 'B' , "ID");
+		h.put( 'C' , "VV");
+		h.put( 'D' , "GI");
+		h.put( 'E' , "FX");
+		h.put( 'F' , "XD");
+		h.put( 'G' , "DD");
+		h.put( 'H' , "IG");
+		h.put( 'I' , "DV");
+		h.put( 'J' , "XG");
+		h.put( 'K' , "GA");
+		h.put( 'L' , "XA");
+		h.put( 'M' , "GV");
+		h.put( 'N' , "FD");
+		h.put( 'O' , "AG");
+		h.put( 'P' , "AX");
+		h.put( 'Q' , "GF");
+		h.put( 'R' , "VI");
+		h.put( 'S' , "DI");
+		h.put( 'T' , "IA");
+		h.put( 'U' , "DG");
+		h.put( 'V' , "IX");
+		h.put( 'W' , "AD");
+		h.put( 'X' , "VF");
+		h.put( 'Y' , "FV");
+		h.put( 'Z' , "DA");
 	
-		h.put( "1" , "XX" );
-		h.put( "2" , "GD" );
-		h.put( "3" , "AV" );
-		h.put( "4" , "XI" );
-		h.put( "5" , "FA" );
-		h.put( "6" , "XI" );
-		h.put( "7" , "II" );
-		h.put( "8" , "AF" );
-		h.put( "9" , "IV" );
-		h.put( "0" , "VA" );
+		h.put( '1' , "XX" );
+		h.put( '2' , "GD" );
+		h.put( '3' , "AV" );
+		h.put( '4' , "XI" );
+		h.put( '5' , "FA" );
+		h.put( '6' , "XI" );
+		h.put( '7' , "II" );
+		h.put( '8' , "AF" );
+		h.put( '9' , "IV" );
+		h.put( '0' , "VA" );
 		
-		h.put( ":" , "FF" );
-		h.put( ";" , "AA" );
-		h.put( "," , "FI" );
-		h.put( "." , "XF" );
-		h.put( "\"" , "VD" );
-		h.put( "!" , "DF" );
-		h.put( "-" , "XV" );
-		h.put( "(" , "IF" );
-		h.put( ")" , "DX" );
-		h.put( " " , "AI" );
-		h.put( "?" , "GG" );
-		h.put( "\n" , "VG" );		
+		h.put( ':' , "FF" );
+		h.put( ';' , "AA" );
+		h.put( ',' , "FI" );
+		h.put( '.' , "XF" );
+		h.put( '\"' , "VD" );
+		h.put( '!' , "DF" );
+		h.put( '-' , "XV" );
+		h.put( '(' , "IF" );
+		h.put( ')' , "DX" );
+		h.put( ' ' , "AI" );
+		h.put( '?' , "GG" );
+		h.put( '\n' , "VG" );	
+		
+		
+		h.put( '\'' , "KK");
+		h.put( '*' , "KV" );
+		h.put( '=' , "KG");
+		h.put( '/' , "KX");	
 	}
 	
 
-	public String getValue(char c)
+	public char [] getValue(char c)
 	{
-		String s = "" + Character.toUpperCase(c);
-		return h.get(s);
+		return h.get(Character.toUpperCase(c)).toCharArray();
 	}
 
 	
-	public String parseString(StringBuilder s) throws FileNotFoundException, UnsupportedEncodingException
+	public String parseString(String fileName) throws IOException
 	{
 		PrintWriter writer = new PrintWriter("out.txt", "UTF-8");
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		Scanner scanner = new Scanner(System.in);
-		StringBuffer sb = new StringBuffer();
-		int m, i;
+		int i, rows, m = 0, index =0;	
+		int last = 0, tempI;
+		StringBuilder sb = new StringBuilder();
 		
 		System.out.print("Keyword: ");
 		String input = scanner.next();
-		char [] keyword = input.toCharArray(); 
-	
-		Queue<Character> q = new LinkedList<Character>();	
+		char [] keyword = input.toCharArray(); 	
+		ArrayList<CharacterLink> CharLinkList = new ArrayList<CharacterLink>();	
 		
-		for(char c: keyword)
+		for(char c : keyword)
 		{
-			qMap.put(c, new LinkedList<Character>());			
-		}
-		
-		for(i = 0; i < s.length(); i++)
-		{
-			String s1 = this.getValue(s.charAt(i));
 			
-			if(s1!=null){
-			q.offer(s1.charAt(0));
-			q.offer(s1.charAt(1));}
-			
+			CharacterLink link = new CharacterLink(c,index++);
+			CharLinkList.add(link);
 		}
+		Collections.sort(CharLinkList);
 		
-	
-		//System.gc();
-			
-		while(!q.isEmpty())
+		
+		//count the document length
+		int count = 0;
+		while(br.ready())
 		{
-			for(char c: keyword)
-			{
-				if(q.peek() != null)
-					qMap.get(c).add(q.poll());
-			}	
+			br.read();
+			count++;
 		}
-	
-
+		br.close();
+		///done////
 		
-		Arrays.sort(keyword);
+		count*=2;
 		
-		for(char c: keyword)
+		//setup the matrix of characters
+		rows = count/keyword.length;
+		int remainder = count%keyword.length;
+		int rFlag = 0;
+		if(remainder > 0)
+			rFlag = 1;
+		int collumns = keyword.length;	
+		char [][] matrix = new char [collumns][(rows+rFlag)];
+		
+		//reload the document
+		br = new BufferedReader(new FileReader(fileName));
+		int oddFlag = 1, row, collumn;
+		
+		
+		//get a character, then store it in alternating collumns
+		
+		
+		char temp[] = new char[2];
+		temp = (this.getValue((char)br.read()));
+		
+		for(row = 0; row < (rows + rFlag); row++)
 		{
-			m = qMap.get(c).size();	
-			for(i = 0 ; i < m ; i++)
-			{
-				if((qMap.get(c).peek() != null))
-				sb.append(qMap.get(c).poll());	
+			for(collumn = 0;collumn <collumns;collumn++)
+			{	
+				//we need to alternate between the two characters in the character array
+				if(oddFlag++ % 2 != 0)
+					matrix[collumn][row] = temp[0];
+				else
+				{
+					matrix[collumn][row] = temp[1];					
+					if(br.ready())
+					{
+						temp = (this.getValue((char)br.read()));
+					}
+					else
+					{
+						collumn = collumns;
+						row = rows+1;
+						break;
+					}
+				}
 			}
-		}		
+		}
+		br.close();
 		
-		writer.printf("%s", sb);
+		for(CharacterLink CL: CharLinkList)
+		{
+			collumn = CL.getVal();
+			//check rFlag
+			if(CL.getVal() < remainder)
+				rFlag = 1;
+			for(row = 0;row<(rows+rFlag);row++)
+			{
+				if(matrix[collumn][row] != 0x0)
+					writer.printf("%s",matrix[collumn][row]);
+			}
+		}
+		
 		scanner.close();
 		writer.close();
-		return "DONE";
 		
+		return("DONE");
 	}
 	
 	

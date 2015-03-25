@@ -34,31 +34,19 @@ public class TestRunner
 		
 		System.out.println("File: ");
 		fileName = console.next();
-		
 
-		try
+		switch(i)
 		{
-			Scanner fileScanner = new Scanner(new File(fileName));
-			s.append(fileScanner.useDelimiter("\\A").next());
-			fileScanner.close();
+			case 1:
+				ETable e = new ETable();
+				System.out.println(e.parseString(fileName));
+				break;
+			
+			case 2:
+				DTable d = new DTable();
+				System.out.println(d.decrypt(fileName));
+				break;
 		}
-		catch(FileNotFoundException e)
-		{
-			System.out.println("File not found");
-		}
-
-			switch(i)
-			{
-				case 1:
-					ETable e = new ETable();
-					System.out.println(e.parseString(s));
-					break;
-				
-				case 2:
-					DTable d = new DTable();
-					System.out.println(d.decrypt(s));
-					break;
-			}
 
 		console.close();
 
